@@ -1,0 +1,40 @@
+<html>
+<head>
+
+    <!-- cargamos y descargamos la libreria de tensorflow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script>
+            //adicion de funcion asincrona que devolvera el valor deseado
+            async function learnLinear(){
+                const model = tf.sequential();      //tipo de modelo, en este caso sera secuencial (regresion lineal)
+               //creamos las capas de la red neuronal, en este caso solo se encuentra 1 sola capa
+                model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+    
+                //preparacion del modelo para que comience a entrenar, aplicando su perdida y su optimizador
+                model.compile({
+                    loss: 'meanSquaredError',   //error cuadratico medio (investigar, estandar de ecuaciones lineales)
+                    optimizer: 'sgd'        //descenso de gradiente estocastico (investigar), este define una metodologia de aprendizaje
+                });
+                
+                //colocamos los datos iniciales que entrenaran el modelo
+                const xs = tf.tensor2d([-1,0,1,2,3,4], [6,1]);
+                const ys = tf.tensor2d([-3,-1,1,3,5,7], [6,1]);
+    
+                //configuramos el numero de iteraciones con el cual iniciara nuestro programa
+                await model.fit(xs, ys, {epochs: 500});
+                document.getElementById('output_field').innerText = 
+                    model.predict(tf.tensor2d([20], [1,1]));
+                
+            }
+    
+            learnLinear();
+        </script>
+    <title>Document</title>
+</head>
+<body>
+    <!--etiqueta div inicial-->
+    <div id="output_field"></div>   
+</body>
+
+   
+</html>
